@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .Values.team }}
+  namespace: {{ .Values.tenant }}
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: Example Project
+
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+
+  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  # Destination clusters can be identified by 'server', 'name', or both.
+  destinations:
+  - namespace: {{ .Values.tenant }}-{{ .Values.team }}
+    name: in-cluster
+
+  sourceNamespaces:
+  - {{ .Values.tenant }}-{{ .Values.team }}
+
+  permitOnlyProjectScopedClusters: true
+
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+  roles:
+    - name: team-01
+      description: privileges for users in teams-01
+      policies:
+        - p, proj:team-01:team-01, applications, *, team-01/tenant-a-team-01/*, allow
+        - p, proj:team-01:team-01, repositories, get, team-01/*, allow
+        - p, proj:team-01:team-01, clusters, get, team-01/*, allow
+      groups:
+        - team-01 

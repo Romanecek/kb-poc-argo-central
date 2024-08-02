@@ -1,0 +1,6 @@
+tenant: tenant-a
+
+argo-cd:
+  configs:
+    params:
+      application.namespaces: "tenant-a-*"

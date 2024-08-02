@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ .Values.tenant }}-{{ .Values.team }}-repository-generator
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+  - scmProvider:
+      github:
+        # The GitHub organization to scan.
+        organization: romanfurstorganization 
+        # For GitHub Enterprise:
+        #api: https://github.com/Romanecek
+        # If true, scan every branch of every repository. If false, scan only the default branch. Defaults to false.
+        allBranches: false
+        # Reference to a Secret containing an access token. (optional)
+        tokenRef:
+          secretName: {{ .Values.tenant }}-{{ .Values.team }}-git-credentials
+          key: token
+      filters:
+      - repositoryMatch: ^kb-poc-argo-org2-
+      values:
+        name: '{{ "{{" }}.organization{{ "}}" }}-{{ "{{" }}.repository{{ "}}" }}'
+  template:
+    metadata:
+      name: 'generated-{{ .Values.tenant }}-{{ .Values.team }}-{{ "{{" }}.repository{{ "}}" }}-repo'
+      namespace: argocd
+    spec:
+      source:
+        repoURL: 'git@github.com:Romanecek/kb-poc-argo-central.git'
+        targetRevision: 'git-repo-app'
+        path: '.'
+        helm:
+          valuesObject:
+            tenant: {{ .Values.tenant }}
+            team: {{ .Values.team }}
+            repoName: '{{ "{{" }}.repository{{ "}}" }}'
+      project: default
+      destination:
+        name: in-cluster
+        namespace: {{ .Values.tenant }}
+      syncPolicy:
+        automated:
+          prune: true
+        syncOptions:
+        - CreateNamespace=true
+---
+apiVersion: v1
+stringData:
+  token: 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
+kind: Secret
+metadata:
+  annotations:
+    managed-by: argocd.argoproj.io
+  name: {{ .Values.tenant }}-{{ .Values.team }}-git-credentials
+  namespace: argocd
+type: Opaque
+

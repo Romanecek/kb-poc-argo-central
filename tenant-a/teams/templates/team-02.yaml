@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.tenant }}-team-02
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: {{ .Release.Name }}
+    app.kubernetes.io/app-name: {{ .Values.tenant }}-team-02
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: {{ .Release.Namespace }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  sources:
+    - path: {{ .Values.tenant }}/teams/team-02
+      repoURL: 'git@github.com:Romanecek/kb-poc-argo-central.git'
+      targetRevision: tenants
+      helm:
+        valueFiles:
+          - ../../values.yaml
+  syncPolicy:
+    automated:
+      prune: true

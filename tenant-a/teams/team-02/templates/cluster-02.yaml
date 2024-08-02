@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.team }}-cluster-02
+  namespace: {{ .Values.tenant }}
+  labels:
+    argocd.argoproj.io/secret-type: cluster
+type: Opaque
+stringData:
+  name: cluster-02
+  server: https://host.docker.internal:62578
+  clusterResources: "true"
+  project: {{ .Values.team }}
+  config: |
+    {
+      "bearerToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6InlBSFlZakJSMXlPOWo0NlpyTTlCWm1Oa29UVUFNeDVLbkJSQXpNX1V6YU0ifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzI4MjE4MjEzLCJpYXQiOjE3MjQ2MTgyMTMsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhcmdvY2QtdXNlciIsInVpZCI6IjU5ZWE3MjBiLTUyMzktNDM2Mi1hNDMwLWEyYWVjODE3YmExNSJ9fSwibmJmIjoxNzI0NjE4MjEzLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06YXJnb2NkLXVzZXIifQ.L8QaYwkqrhxbJcOAlYBPyCWKULu3oewRxYPN7Wx0gQGo6BjTCE80KSFt4t4NuL25EiQ65xLkhY8iOifS2vRycU5z3tpK0vFownpuWBVC7NJz1Vgn9xvYFGyXpgegFk49lWlE5gUfBJhzlbdzlgtECLnhgpsxR6bsnmGqO99LqW5rrIYynh9gVkjqmfaDJE30gthXJlxwcijdtNL7Mv2fTtl3_TubcTQmZ9VmZK_nYlEDZ-PQ9bda17wcu0DLVCqfnX1X0IySnohkRx2tReluu1qGsDX13EHh1_Q37s2aiMyWcO6Q4gPUIqzhITj7h8lN1ryW0uv-RJtnQKjh9Z8eFQ",
+      "tlsClientConfig": {
+        "insecure": true
+      }
+    }

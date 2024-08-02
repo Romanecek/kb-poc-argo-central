@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.team }}-cluster-01
+  namespace: {{ .Values.tenant }}
+  labels:
+    argocd.argoproj.io/secret-type: cluster
+type: Opaque
+stringData:
+  name: cluster-01
+  server: https://host.docker.internal:55243
+  clusterResources: "true"
+  project: {{ .Values.team }}
+  config: |
+    {
+      "execProviderConfig": {
+        "apiVersion": "client.authentication.k8s.io/v1beta1",
+         "args": [
+           "{\"apiVersion\": \"client.authentication.k8s.io/v1beta1\",\"kind\":\"ExecCredential\",\"status\": {\"token\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6ImFCaGUwdjFCb0xTUDJpS0hZb2tuSjVPdTQzeXZ5cHJnVHZXUWVNd3ZuSDAifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzI4NDU5MjM0LCJpYXQiOjE3MjQ4NTkyMzQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhcmdvY2QtdXNlciIsInVpZCI6ImI3OTdjZDNmLWI3M2UtNGE4My1iMWU0LWQzMmYxY2Y2ZmI5OSJ9fSwibmJmIjoxNzI0ODU5MjM0LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06YXJnb2NkLXVzZXIifQ.pG7FtZBXtD7_T9Sj4tVQhxlhWDvBDNDZ9gTwYIaTsGphOjhTSpIs34poqQnSkHUtVwPFJYOsxtCCbNNoiJx11CQ5ryRhe_r3OiB-0yrQzaDSWUR7QhEkEcFRa9qvHWJ4o3a7Z3-MGueG1cj9qwU-LBnciJR_8LgHj8kjiK17TKMNLVOPXcRGMOY8SCPfP6rhDX1fIcrLvgdvy0bRopx-TjKvCXn7-ZOSuh_tZ4dsxbzPB8pyykjqGnZh-MW7EeDag56YIV_dB-bLCgPPQlmSvLhQRKyP4d9F_jzsa3fYjwJnUcbUsKcIxvgr8f4clgo2ESb60DpSW9QaoPjWY4tBlA\", \"expirationTimestamp\": \"2024-10-09T07:33:44Z\"}}"
+         ],
+        "command": "/bin/echo"
+     },
+      "tlsClientConfig": {
+        "insecure": true
+      }
+    }
